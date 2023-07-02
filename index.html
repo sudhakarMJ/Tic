@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Tic Tac Toe</title>
+<style>
+body {
+  background-color:rgb(86, 86, 219);
+}
+.modal-content {
+  background-color: rgb(86, 86, 219);
+  padding: 20px;
+  border: none;
+  width: 200px;
+  text-align: center;
+}
+.all {
+  position: relative;
+  top: 100px;
+  left: 100px;
+}
+.header {
+  color: navajowhite;
+}
+.display {
+  font-size: 40px;
+  color: rgb(83, 4, 20);
+  display: inline;
+  font-weight: bolder;
+}
+table {
+  background-color: green;
+  border-collapse: collapse;
+  width: 300px;
+  height: 300px;
+  border: none;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+  margin-bottom: 30px;
+}
+table td {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+  width: 100px;
+  height: 100px;
+  text-align: center;
+  font-size: 50px;
+  cursor: pointer;
+}
+table td:hover {
+  background-color: transparent;
+}
+table td.x {
+  color: rgb(5, 5, 245);
+}
+table td.o {
+  color: red;
+}
+.modal {
+  width: 100px;
+  height: 100px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.btn {
+  color:darkblue;
+  cursor: pointer;
+  display: inline;
+  font-size: 30px;
+  cursor: pointer;
+  font-weight: bolder;
+}
+</style>
+</head>
+<body>
+<div class="all">
+<h1 class="header">Tic-Tac-Toe</h1>
+<table>
+<tr>
+  <td onclick="handleClick(this)"></td>
+  <td onclick="handleClick(this)"></td>
+  <td onclick="handleClick(this)"></td>
+</tr>
+<tr>
+  <td onclick="handleClick(this)"></td>
+  <td onclick="handleClick(this)"></td>
+  <td onclick="handleClick(this)"></td>
+</tr>
+<tr>
+  <td onclick="handleClick(this)"></td>
+  <td onclick="handleClick(this)"></td>
+  <td onclick="handleClick(this)"></td>
+</tr>
+</table>
+<div id="alertModal" class="modal">
+<div class="modal-content">
+<p class="js-display display"></p>
+<div class="js-btn btn" onclick="hideAlert()"></div>
+</div>
+</div>
+<script>
+  let currentPlayer = 'X';
+function handleClick(cell) {
+  if (!cell.textContent) {
+  cell.textContent = currentPlayer;
+  cell.classList.add(currentPlayer.toLowerCase());
+  if (checkWin(currentPlayer)) {
+  document.querySelector('.js-display').innerHTML = `You won!`;
+  document.querySelector('.js-btn').innerHTML ='OK'
+  showAlert();
+  resetBoard();
+  return;
+}
+if (checkDraw()) {
+  document.querySelector('.js-display').innerHTML = `It\'s a draw!`;
+  document.querySelector('.js-btn').innerHTML ='OK'
+  showAlert();
+  resetBoard();
+  return;
+  }
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+  setTimeout(makeComputerMove, 100);
+}
+}
+function makeComputerMove() {
+  const emptyCells = Array.from(document.querySelectorAll('td:not(.x):not(.o)'));
+  if (emptyCells.length > 0) {
+  const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+  randomCell.textContent = currentPlayer;
+  randomCell.classList.add(currentPlayer.toLowerCase());
+  if (checkWin(currentPlayer)) {
+  document.querySelector('.js-display').innerHTML = `Computer wins!`;
+  document.querySelector('.js-btn').innerHTML ='OK'
+  showAlert();
+  resetBoard();
+  return;
+  }
+if (checkDraw()) {
+  document.querySelector('.js-display').innerHTML = `It\'s a draw!`;
+  document.querySelector('.js-btn').innerHTML ='OK'
+  showAlert();
+  resetBoard();
+  return;
+  }
+  currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+}
+}
+function checkWin(player) {
+  const cells = document.querySelectorAll('td');
+  const winningCombinations = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
+];
+  return winningCombinations.some(combination => {
+  return combination.every(index => cells[index].classList.contains(player.toLowerCase()));
+});
+}
+function checkDraw() {
+  const cells = document.querySelectorAll('td');
+  return Array.from(cells).every(cell => cell.textContent !== '');
+}
+function resetBoard() {
+  const cells = document.querySelectorAll('td');
+  Array.from(cells).forEach(cell => {
+  cell.textContent = '';
+  cell.className = '';
+});
+  currentPlayer = 'X';
+}
+function showAlert() {
+  const modal = document.getElementById('alertModal');
+  modal.style.display = 'block';
+  }
+function hideAlert() {
+  const modal = document.getElementById('alertModal');
+  modal.style.display = 'none';
+}
+</script>
+</body>
+</html>
